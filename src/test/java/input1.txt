@@ -1,0 +1,5 @@
+main(){
+    name=namee=nameee=5;
+    name = name + 1;
+    print name namee;
+}
