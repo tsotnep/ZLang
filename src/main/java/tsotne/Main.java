@@ -18,7 +18,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class Main {
-    public static final String INPUT_FILE = "C:\\git\\ZLang\\ZLang\\src\\test\\java\\input1.txt";
+    public static final String INPUT_FILE = "src/test/java/input1.txt";
     public static void main(String[] args) {
         try {
             FileInputStream fileInputStream = new FileInputStream(INPUT_FILE);

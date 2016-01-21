@@ -2,7 +2,7 @@ grammar ZLang;
 
 program :   method+ EOF;
 
-method  :   variable ('(' variable* ')')* '{' stmnt* '}';
+method  :   VNAME ('(' VNAME* ')')* '{' stmnt* '}';
 
 stmnt   :
         (
@@ -11,6 +11,7 @@ stmnt   :
             |   forStmt
             |   assignStmt
             |   printStmt
+            |   declaration
         )
         END
         ;
@@ -18,13 +19,15 @@ stmnt   :
 ifStmt      :   IF;
 whileStmt   :   WHILE;
 forStmt     :   FOR;
-assignStmt  :   (q+=variable ASSIGN)+ expression;
+declaration :   VTYPE VNAME '=' expression;
+//declaration :   VTYPE (VNAME ( '=' expression)?) (','(VNAME ( '=' expression)?))*; //this: INT m0, ma=1, mb=2,..;
+assignStmt  :   VNAME ASSIGN expression;
+//assignStmt  :   (q+=VNAME ASSIGN)+ expression;    //this: m0=m1=m2=5;
 printStmt   :   PRINT (q+=expression)*;
 
 
-expression  :   NUMBER              #nNUMBER
-            |   variable            #nVariable
-            |   string              #nString
+expression  :   VVALUE                                                          #aValue
+            |   VNAME                                                           #aVariable
             |   expression op=(ADD | SUB)                           expression  #opExpression
             |   expression op=(MUL | DIV)                           expression  #opExpression
             |   expression op=(ORR | AND)                           expression  #opExpression
@@ -53,16 +56,21 @@ NEQ     :   '!=';
 ORR     :   '||';
 AND     :   '&&';
 
-string      :   '"' WORD '"';
-variable    :   WORD;
 
 
+VTYPE       :   INT | DBL | STR;
+VNAME       :   LETTER (DIGIT | LETTER)* ;
+VVALUE      :   INTEGER | DOUBLE | STRING;
 
-NUMBER  :   INTTYPE | DOUBLETYPE;
-WORD    :   LETTER (DIGIT | LETTER)* ;
 
-fragment    DOUBLETYPE      :   DIGIT+ '.' DIGIT+;
-fragment    INTTYPE         :   DIGIT+;
+fragment    INT     :   'INT';
+fragment    DBL     :   'DBL';
+fragment    STR     :   'STR';
+
+fragment    INTEGER         :   DIGIT+;
+fragment    DOUBLE          :   DIGIT+ '.' DIGIT+;
+fragment    STRING          :   '"' .*? '"';
+
 fragment    LETTER          :   [a-zA-Z];
 fragment    DIGIT           :   [0-9];
 
